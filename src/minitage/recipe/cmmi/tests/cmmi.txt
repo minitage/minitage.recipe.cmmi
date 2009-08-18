@@ -1,18 +1,15 @@
 
 ===============================================
-minitage.recipe:cmmi
+minitage.recipe.cmmi
 ===============================================
 
 Abstract
 -----------------
-    - UNAME-patches
-        OS specific (sys.platform.lower()) patches to apply  [see cmmi recipe for documentation]
-    - make-targets
-        default to all and install, make targets to run
+
     - The cmmi recipe use abusivly or -rpath to save you from settings LD_LIBRARY_PATH at run time.
     - If you are inside a minitage environment, all the dependencies of your minibuild are put in the environment.
       That mean that CFLAGS, LDFLAGS, PKG_CONFIG_PATH, and so on are updated to reference your minibuild's dependencies.
-    - minitage.recipe:cmmi is a replacment fo ``zc.recipe.cmmi``.
+    - minitage.recipe.cmmi is a replacment fo ``zc.recipe.cmmi``.
     - It intends to do the *configure && make && make install* dance with hooks where you can do (in python) specific stuff at each stage of the build cursus.
     - With this recipe, if the destination directory exists, we only remove it
       when we can sucessfully install something, unless that we never touch to it,
@@ -21,7 +18,10 @@ Abstract
 
 Specific options
 -----------------
-
+* UNAME-patches
+    OS specific (sys.platform.lower()) patches to apply  [see cmmi recipe for documentation]
+* make-targets
+    default to all and install, make targets to run
 * inner-dir: change to inner directory before doing anything.
 * prefix: where to install (defaults to options:location)
   Be warn that the content of the destination will be wiped before unless you
@@ -108,7 +108,7 @@ This first buildout is classical, trying to build some url.
     ... parts =
     ...     part
     ... [part]
-    ... recipe=minitage.recipe:cmmi
+    ... recipe=minitage.recipe.cmmi
     ... """)
     >>> sh('bin/buildout install part')
     bin/buildout install part...
@@ -149,7 +149,7 @@ Running the buildout with the url bit.
     ... parts =
     ...     part
     ... [part]
-    ... recipe=minitage.recipe:cmmi
+    ... recipe=minitage.recipe.cmmi
     ... url = file://${buildout:directory}/foo.tgz
     ... """
     >>> touch('buildout.cfg', data=data)
@@ -170,7 +170,7 @@ Running the buildout with the url bit.
     all
     minitage.recipe: Running make  install
     install
-    minitage.recipe: Completed install.
+    minitage.recipe: Completed install...
 
 General usage
 ++++++++++++++++++++++
@@ -182,7 +182,7 @@ This first buildout does nothing except print us the hooks calls. We have desact
     ... parts =
     ...     part
     ... [part]
-    ... recipe=minitage.recipe:cmmi
+    ... recipe=minitage.recipe.cmmi
     ... url = file://${buildout:directory}/foo.tgz
     ... noconfigure=true
     ... noinstall = true
@@ -217,7 +217,7 @@ This second one aimes to show us the patch capababilities.
     ... parts =
     ...     part
     ... [part]
-    ... recipe=minitage.recipe:cmmi
+    ... recipe=minitage.recipe.cmmi
     ... url = file://${buildout:directory}/foo.tgz
     ... patches = ${buildout:directory}/patch
     ... noconfigure=true
@@ -254,7 +254,7 @@ The patch level is wrong !
     ... parts =
     ...     part
     ... [part]
-    ... recipe=minitage.recipe:cmmi
+    ... recipe=minitage.recipe.cmmi
     ... url = file://${buildout:directory}/foo.tgz
     ... patches = ${buildout:directory}/patch
     ... patch-options = -p1
@@ -281,7 +281,7 @@ We have hooks to achieve that. A hook is a python callable which takes at least 
     ... parts =
     ...     part
     ... [part]
-    ... recipe=minitage.recipe:cmmi
+    ... recipe=minitage.recipe.cmmi
     ... url = file://${buildout:directory}/foo.tgz
     ... pre-unpack-hook    = ${buildout:directory}/hooks.py:pre_unpack_hook
     ... post-unpack-hook   = ${buildout:directory}/hooks.py:post_unpack_hook
@@ -328,8 +328,7 @@ We have hooks to achieve that. A hook is a python callable which takes at least 
     install
     minitage.recipe: Executing post-make-hook
     post_make_hook in /tmp/buildout.test target /tmp/buildout.test/parts/part
-    minitage.recipe: Completed install.
-    <BLANKLINE>
+    minitage.recipe: Completed install...
 
 
 MD5 check
@@ -344,7 +343,7 @@ As we have already the foo package in our download cache, we try to download som
     ... parts =
     ...     part
     ... [part]
-    ... recipe=minitage.recipe:cmmi
+    ... recipe=minitage.recipe.cmmi
     ... md5sum = b4d
     ... url = file://${buildout:directory}/bar.tgz
     ... """
@@ -374,7 +373,7 @@ Giving configure options the two possible ways.
     ... parts =
     ...     part
     ... [part]
-    ... recipe=minitage.recipe:cmmi
+    ... recipe=minitage.recipe.cmmi
     ... url = file://${buildout:directory}/bar.tgz
     ... configure-options = foo
     ... extra_options = bar
@@ -395,7 +394,7 @@ Giving os specific rules.
     ... parts =
     ...     part
     ... [part]
-    ... recipe=minitage.recipe:cmmi
+    ... recipe=minitage.recipe.cmmi
     ... url = file://${buildout:directory}/foo.tgz
     ... configure-options-linux = linuxoptions
     ... """
@@ -412,7 +411,7 @@ Or, in the same manner, you can specify OS specific patches: (darwin, linux, fre
     ... parts =
     ...     part
     ... [part]
-    ... recipe=minitage.recipe:cmmi
+    ... recipe=minitage.recipe.cmmi
     ... patch-options = -p1
     ... url = file://${buildout:directory}/foo.tgz
     ... """
@@ -436,7 +435,7 @@ We will use some hook to print the relevant parts.
     ... parts =
     ...     part
     ... [part]
-    ... recipe=minitage.recipe:cmmi
+    ... recipe=minitage.recipe.cmmi
     ... url = file://${buildout:directory}/foo.tgz
     ... pre-make-hook    = ${buildout:directory}/hooks.py:pre_unpack_hook
     ... includes-dirs = /foo/include
@@ -478,7 +477,7 @@ You can play also with the environment directly in two ways.
         ... [foo]
         ... CFLAGS=bar
         ... [part]
-        ... recipe=minitage.recipe:cmmi
+        ... recipe=minitage.recipe.cmmi
         ... url = file://${buildout:directory}/foo.tgz
         ... pre-make-hook    = ${buildout:directory}/hooks.py:pre_unpack_hook
         ... environment = foo
@@ -499,7 +498,7 @@ You can play also with the environment directly in two ways.
         ... parts =
         ...     part
         ... [part]
-        ... recipe=minitage.recipe:cmmi
+        ... recipe=minitage.recipe.cmmi
         ... url = file://${buildout:directory}/foo.tgz
         ... pre-make-hook    = ${buildout:directory}/hooks.py:pre_unpack_hook
         ... noconfigure = true
@@ -524,7 +523,7 @@ It is possible to autogenerate the configure files.
         ... parts =
         ...     part
         ... [part]
-        ... recipe=minitage.recipe:cmmi
+        ... recipe=minitage.recipe.cmmi
         ... url = file://${buildout:directory}/foo.tgz
         ... noconfigure = true
         ... nomake = true
@@ -548,7 +547,7 @@ Handling shared mode as a backward compatibility with zc.recipe.cmmi.
     ... parts =
     ...     part
     ... [part]
-    ... recipe=minitage.recipe:cmmi
+    ... recipe=minitage.recipe.cmmi
     ... url = file://${buildout:directory}/foo.tgz
     ... shared = true
     ... """
