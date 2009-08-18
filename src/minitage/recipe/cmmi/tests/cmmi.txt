@@ -18,6 +18,8 @@ Abstract
 
 Specific options
 -----------------
+Please look for options at : http://pypi.python.org/pypi/minitage.recipe.common#options-shared-by-all-the-recipes
+
 * UNAME-patches
     OS specific (sys.platform.lower()) patches to apply  [see cmmi recipe for documentation]
 * make-targets
