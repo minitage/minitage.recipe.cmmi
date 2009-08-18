@@ -113,12 +113,6 @@ class Recipe(common.MinitageCommonRecipe):
             '\n'
         )
 
-        # build directory
-        self.build_dir = self.options.get('build-dir', None)
-        self.inner_dir = self.options.get('inner-dir', None)
-        if self.inner_dir:
-            self.inner_dir = os.path.join(self.tmp_directory, self.inner_dir)
-
         # shared builds
         if 'shared' in self.options:
             self.shared = os.path.join(
@@ -127,9 +121,8 @@ class Recipe(common.MinitageCommonRecipe):
             )
             self.prefix = options['location'] = self.shared
 
-    def go_inner_dir(self):
-        if self.inner_dir:
-            os.chdir(self.inner_dir)
+        # build directory
+        self.build_dir = self.options.get('build-dir', None) 
 
     def install(self):
         """Install the recipe."""
@@ -227,34 +220,6 @@ class Recipe(common.MinitageCommonRecipe):
         state = [self.url, self.extra_options, self.autogen,
                  self.patch, self.patch_options, env]
         return sha1(''.join(state)).hexdigest()
-
-    def _get_compil_dir(self, directory, filter=True):
-        """Get the compilation directory after creation.
-        Basically, the first repository in the directory
-        which is not the download cache if there are no
-        files in the directory
-        Arguments:
-            - directory where we will compile.
-        """
-        self.logger.info('Guessing compilation directory')
-        self.go_inner_dir()
-        contents = os.listdir(directory)
-        # remove download dir
-        if '.download' in contents:
-            del contents[contents. index('.download')]
-        top = directory
-        if filter:
-            f = [i
-                 for i in os.listdir(directory)
-                 if (not os.path.isdir(os.path.join(directory, i)))
-                 and (not i.startswith('.'))]
-            d = [i
-                 for i in os.listdir(directory)
-                 if os.path.isdir(os.path.join(directory, i))
-                 and (not i.startswith('.'))]
-            if len(f) < 2 and d:
-                top = os.path.join(directory, d[0])
-        return top
 
     def _autogen(self):
         """Run autogen script.

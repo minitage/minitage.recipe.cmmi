@@ -227,20 +227,6 @@ class RecipeTest(unittest.TestCase):
             os.path.join(p, 'a')
         )
 
-    def testGetCompilDir(self):
-        """testGetCompilDir."""
-        p = tmp
-        os.system("""
-cd %s
-mkdir .download
-mkdir tutu
-mkdir tutu/.download
-""" % (tmp))
-        bd = Buildout(fp, [])
-        bd.offline = False
-        recipe = MinitageCommonRecipe(bd, '666', bd['part'])
-        directory = recipe._get_compil_dir(tmp)
-        self.assertEquals(directory, os.path.join(tmp, 'tutu'))
 
     def testChooseConfigure(self):
         """testChooseConfigure."""
