@@ -121,8 +121,7 @@ class Recipe(common.MinitageCommonRecipe):
             )
             self.prefix = options['location'] = self.shared
 
-        # build directory
-        self.build_dir = self.options.get('build-dir', None) 
+
 
     def install(self):
         """Install the recipe."""
