@@ -85,6 +85,24 @@ class Recipe(common.MinitageCommonRecipe):
             self.options.get('configure-options-%s' % (self.uname.lower()), '')
         )
 
+        if 'darwin' in self.uname.lower():
+            kv = os.uname()[2]
+            osxflavor = None
+            if kv == '9.8.0':
+                osxflavor = 'leopard'
+            if kv == '10.0.0':
+                osxflavor = 'snowleopard'
+            if osxflavor:
+                self.patches.extend(
+                    splitstrip(
+                        self.options.get(
+                            'configure-options-%s' % osxflavor,
+                            ''
+                        )
+                    )
+                )
+
+
         # if gmake is setted. taking it as the make cmd !
         # be careful to have a 'gmake' in your path
         # we have to make it only in non linux env.

@@ -37,7 +37,7 @@ Please look for options at : http://pypi.python.org/pypi/minitage.recipe.common#
     inner directory to execute the build dance [see cmmi recipe for documentation]
 * configure-options-UNAME
     Os specific options to give to configure
-    uname can be either linux2|freebsd6|freebsd7|darwin
+    uname can be either linux2|freebsd6|freebsd7|darwin|leopard|snowleopard (darwin for both leopard)
     Its the result of sys.platform.lower() [see cmmi recipe for documentation]
 * configure
     configure script to use (default to ./configure)
