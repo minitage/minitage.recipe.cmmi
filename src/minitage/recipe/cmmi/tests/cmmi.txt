@@ -39,6 +39,8 @@ Please look for options at : http://pypi.python.org/pypi/minitage.recipe.common#
     Os specific options to give to configure
     uname can be either linux2|freebsd6|freebsd7|darwin|leopard|snowleopard (darwin for both leopard)
     Its the result of sys.platform.lower() [see cmmi recipe for documentation]
+* configure-Uname
+    * specific OS configure script to use (darwin, leopard, snowleopard, linux, freebsd, freebsd(6,7,8)
 * configure
     configure script to use (default to ./configure)
 * prefix-separator [see cmmi recipe for documentation]

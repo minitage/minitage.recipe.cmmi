@@ -55,7 +55,11 @@ class Recipe(common.MinitageCommonRecipe):
 
 
         # configure script for cmmi packages
-        self.configure = options.get('configure', 'configure')
+        self.configure = options.get('configure-%s' % self.osxflavor, None)
+        if not self.configure:
+            self.configure = options.get('configure-%s' % self.uname.lower(), None)
+        if not self.configure:
+            self.configure = options.get('configure', 'configure')
 
         # prefix separtor in ./configure --prefix%SEPARATOR%path
         self.prefix_separator = options.get('prefix-separator', '=')
@@ -93,15 +97,7 @@ class Recipe(common.MinitageCommonRecipe):
             if kv == '10.0.0':
                 osxflavor = 'snowleopard'
             if osxflavor:
-                self.patches.extend(
-                    splitstrip(
-                        self.options.get(
-                            'configure-options-%s' % osxflavor,
-                            ''
-                        )
-                    )
-                )
-
+                self.configure_options += ' %s' % self.options.get('configure-options-%s' % osxflavor, '')
 
         # if gmake is setted. taking it as the make cmd !
         # be careful to have a 'gmake' in your path
