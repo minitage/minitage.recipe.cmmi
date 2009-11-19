@@ -6,6 +6,7 @@ CHANGELOG
 --------
 
     - fix develop link
+    - win32 fix
 
 1.37
 ---------

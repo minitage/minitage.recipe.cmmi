@@ -32,6 +32,10 @@ try:
     from hashlib import sha1
 except ImportError: # Python < 2.5
     from sha import new as sha1
+try:
+    from os import uname
+except:
+    from platform import uname
 
 from distutils.dir_util import copy_tree
 from minitage.recipe.common import common
@@ -90,7 +94,7 @@ class Recipe(common.MinitageCommonRecipe):
         )
 
         if 'darwin' in self.uname.lower():
-            kv = os.uname()[2]
+            kv = uname()[2]
             osxflavor = None
             if kv == '9.8.0':
                 osxflavor = 'leopard'
