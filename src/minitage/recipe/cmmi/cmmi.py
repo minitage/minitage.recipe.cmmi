@@ -39,7 +39,7 @@ except:
 
 from distutils.dir_util import copy_tree
 from minitage.recipe.common import common
-from minitage.core.common import  splitstrip
+from minitage.core.common import  splitstrip, remove_path
 from minitage.core import core
 
 class Recipe(common.MinitageCommonRecipe):
@@ -92,7 +92,7 @@ class Recipe(common.MinitageCommonRecipe):
         self.configure_options += ' %s' % (
             self.options.get('configure-options-%s' % (self.uname.lower()), '')
         )
-        
+
         # configure options per os
         configoptreplacer = self.options.get(
             'configure-options-replace-%s' % self.uname.lower(),
@@ -100,7 +100,7 @@ class Recipe(common.MinitageCommonRecipe):
         ).strip()
         if configoptreplacer:
             self.configure_options = ' %s' % (configoptreplacer)
-            
+
         if 'darwin' in self.uname.lower():
             kv = uname()[2]
             osxflavor = None
@@ -111,6 +111,8 @@ class Recipe(common.MinitageCommonRecipe):
             if osxflavor:
                 self.configure_options += ' %s' % self.options.get('configure-options-%s' % osxflavor, '')
 
+        self.configure_options = common.ENDLINE.sub(' ', self.configure_options)
+        
         # if gmake is setted. taking it as the make cmd !
         # be careful to have a 'gmake' in your path
         # we have to make it only in non linux env.
@@ -119,9 +121,9 @@ class Recipe(common.MinitageCommonRecipe):
         if self.buildout.get('part', {}).get('gmake', None)\
            and self.uname not in ['cygwin', 'linux']:
             gnumake = 'gmake'
-        self.options['make-binary'] = self.make_cmd = self.options.get('make-binary-%s'%self.uname, 
+        self.options['make-binary'] = self.make_cmd = self.options.get('make-binary-%s'%self.uname,
                                         self.options.get('make-binary', gnumake)).strip()
-        self.options['make-options'] = self.make_options = self.options.get('make-options-%s'%self.uname, 
+        self.options['make-options'] = self.make_options = self.options.get('make-options-%s'%self.uname,
                                                  self.options.get('make-options', '')).strip()
 
         # what we will install.
@@ -130,16 +132,19 @@ class Recipe(common.MinitageCommonRecipe):
         # We will default to make '' and make install
         self.install_in_place = self.options.get('install-in-place')
         self.makedir = self.options.get('makedir-%s'%self.uname, self.options.get('makedir', '')).strip()
-        self.makeinstalldir = self.options.get('makeinstalldir-%s'%self.uname, self.options.get('makeinstalldir','')).strip()
+        self.makeinstalldir = self.options.get('makeinstalldir-%s'%self.uname, 
+                                               self.options.get('makeinstalldir','')).strip()
         self.make_targets = splitstrip(
-            self.options.get( 'make-targets-%s'%self.uname, self.options.get( 'make-targets', ' ')),
+            self.options.get('make-targets-%s'%self.uname,
+                             self.options.get( 'make-targets', ' ')),
             '\n'
         )
         if not self.make_targets:
             self.make_targets = ['']
 
         self.install_targets =  splitstrip(
-            self.options.get( 'make-install-targets', 'install'),
+            self.options.get('make-install-targets%s'%self.uname,
+                             self.options.get( 'make-install-targets', 'install')),
             '\n'
         )
 
@@ -150,8 +155,14 @@ class Recipe(common.MinitageCommonRecipe):
                 self._state_hash()
             )
             self.prefix = options['location'] = self.shared
-
-
+       
+        # 'no' options
+        self.noconfigure = options.get('noconfigure-%s'%self.uname, 
+                                        options.get('noconfigure', ''))
+        self.nomake = options.get('nomake-%s'%self.uname, 
+                                  options.get('nomake', ''))
+        self.noinstall = options.get('noinstall-%s'%self.uname, 
+                                     options.get('noinstall', ''))
 
     def install(self):
         """Install the recipe."""
@@ -190,19 +201,29 @@ class Recipe(common.MinitageCommonRecipe):
 
             # preconfigure hook
             self._call_hook('post-unpack-hook')
-
-            # choose configure
-            self.configure = self._choose_configure(self.compil_dir)
-            self.options['compile-directory'] = self.build_dir
+            
+            # configure compilation build directory
+            if self.build_dir:
+                if not os.path.isdir(self.build_dir):
+                    os.makedirs(self.build_dir)
+            else:
+                self.build_dir = self.compil_dir
 
             # apply patches
             self._patch(self.build_dir)
 
-            # preconfigure hook
-            self._call_hook('pre-configure-hook')
-
+            # preautogen hook
+            self._call_hook('pre-autogen-hook')
+            
             # autogen, maybe
             self._autogen()
+            
+            # choose configure
+            self.configure = self._choose_configure(self.compil_dir)
+            self.options['compile-directory'] = self.build_dir
+
+            # preconfigure hook
+            self._call_hook('pre-configure-hook')
 
             # run configure
             self._configure(self.configure)
@@ -211,6 +232,7 @@ class Recipe(common.MinitageCommonRecipe):
             self._call_hook('pre-make-hook')
 
             # running make
+            #import pdb;pdb.set_trace()
             self._make(self.build_dir, self.make_targets)
 
             # post build hook
@@ -263,20 +285,14 @@ class Recipe(common.MinitageCommonRecipe):
             self._system(autogen)
         os.chdir(cwd)
 
-    def _choose_configure(self, compile_dir):
+    def _choose_configure(self, compile_dir=None):
         """configure magic to runne with
         exotic configure systems.
         """
         self.go_inner_dir()
-        if self.build_dir:
-            if not os.path.isdir(self.build_dir):
-                os.makedirs(self.build_dir)
-        else:
-            self.build_dir = compile_dir
-
         configure = os.path.join(compile_dir, self.configure)
         if not os.path.isfile(configure) \
-           and (not 'noconfigure' in self.options and not 'noconfigure-%s' % self.uname in self.options):
+           and (not self.noconfigure):
             self.logger.error('Unable to find the configure script')
             raise core.MinimergeError(
                 'Invalid package contents, '
@@ -292,7 +308,7 @@ class Recipe(common.MinitageCommonRecipe):
         self.go_inner_dir()
         cwd = os.getcwd()
         os.chdir(self.build_dir)
-        if not 'noconfigure' in self.options and not 'noconfigure-%s' % self.uname in self.options:
+        if not self.noconfigure:
             self._system(
                     '%s %s%s %s' % (
                         configure,
@@ -310,7 +326,7 @@ class Recipe(common.MinitageCommonRecipe):
         os.chdir(directory)
         if self.makedir and os.path.exists(self.makedir):
             os.chdir(self.makedir)
-        if not 'nomake' in self.options:
+        if not self.nomake:
             for target in targets:
                 try:
                     self._system('%s %s %s' % (self.make_cmd, self.make_options, target))
@@ -328,7 +344,7 @@ class Recipe(common.MinitageCommonRecipe):
         if self.makeinstalldir:
             os.chdir(self.makeinstalldir)
         tmp = '%s.old' % self.prefix
-        if not 'noinstall' in self.options and not 'noinstall-%s' % self.uname in self.options:
+        if not self.noinstall:
             if os.path.isdir(self.prefix):
                 copy_tree(self.prefix, tmp)
             if not self.install_in_place:
@@ -340,8 +356,7 @@ class Recipe(common.MinitageCommonRecipe):
                 self._call_hook('pending-make-install-hook')
                 self._make(directory, self.install_targets)
             except Exception, e:
-                shutil.rmtree(self.prefix)
-                os.chdir(cwd)
+                remove_path(cwd)
                 shutil.move(tmp, self.prefix)
                 raise core.MinimergeError('Install failed:\n\t%s' % e)
         if os.path.exists(tmp):

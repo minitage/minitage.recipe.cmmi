@@ -19,10 +19,8 @@ Abstract
 Specific options
 -----------------
 Please look for options at : http://pypi.python.org/pypi/minitage.recipe.common#options-shared-by-all-the-recipes
-
-* UNAME-patches
-    OS specific (sys.platform.lower()) patches to apply  [see cmmi recipe for documentation]
-* make-targets
+   
+* make-targets(-UNAME)
     default to all and install, make targets to run
 * inner-dir: change to inner directory before doing anything.
 * prefix: where to install (defaults to options:location)
@@ -33,27 +31,39 @@ Please look for options at : http://pypi.python.org/pypi/minitage.recipe.common#
 
     install-in-place=True
 
-* build-dir
+* build-dir(-UNAME)
     inner directory to execute the build dance [see cmmi recipe for documentation]
-* configure-options-UNAME
+* configure-options(-UNAME)
     Os specific options to give to configure
     uname can be either linux2|freebsd6|freebsd7|darwin|leopard|snowleopard (darwin for both leopard)
     Its the result of sys.platform.lower() [see cmmi recipe for documentation]
-* configure-Uname
+* configure(-UNAME)
     * specific OS configure script to use (darwin, leopard, snowleopard, linux, freebsd, freebsd(6,7,8)
-* configure
-    configure script to use (default to ./configure)
+      configure script to use (default to ./configure)
 * prefix-separator [see cmmi recipe for documentation]
     prefix separator to use between --prefix and location (default to =)
 * prefix-options [see cmmi recipe for documentation]
     what to put for the "prefix" expression, default to --prefix$PREFIX_SEPARATOR$LOCATION
 * autogen
     autogen script to use if any [optionnal]
-* configure-options
+* configure-options(-UNAME)
     options to feed configure with [see cmmi recipe for documentation]
+* configure-options(-UNAME)-replace
+    - overide options for a specific OS
 * extra_options
     appendended to configure-options  [see cmmi recipe for documentation]
-
+* mingw  
+    For windows/cygwin use only
+    Set this variable (mingw=true for example) to use mingw compiler
+    Default will search for a mingw installation in /minitageprefix/mingw
+* mingw-path
+    Alternative path for mingw installation
+* noconfigure(-UNAME)
+    do not run ./configure
+* nomake(-UNAME)
+    do not run make
+* noinstall(-UNAME)
+    do not run make install
 * hooks
 
   A hook is in the form /path/to/hook:CALLABLE::
@@ -80,13 +90,10 @@ Please look for options at : http://pypi.python.org/pypi/minitage.recipe.common#
     * post-build-hook
         hook executed after the build make targets are done
     * pending-make-install
-        hook executed after the make and before the make install is done
+        hook executed after the make and before the make install is done.
     * post-make-hook
         hook executed after the make install is done
-    * noconfigure
-        do not run ./configure
-    * noinstall
-        do not run make install
+
 
 Detailled documentation
 -------------------------

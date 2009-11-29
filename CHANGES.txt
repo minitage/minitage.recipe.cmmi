@@ -2,9 +2,12 @@
 CHANGELOG
 =======================
 
-->1.39
+
+
+->UP
 --------
 
+    - add per os options
     - fix develop link
     - win32 fix
 
