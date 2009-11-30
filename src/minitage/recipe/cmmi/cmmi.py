@@ -198,7 +198,9 @@ class Recipe(common.MinitageCommonRecipe):
 
             # set pypath
             self._set_py_path()
-
+            
+            # write environment file for further debugging
+            self.write_env()
             # preconfigure hook
             self._call_hook('post-unpack-hook')
             
@@ -245,6 +247,8 @@ class Recipe(common.MinitageCommonRecipe):
             self._call_hook('post-make-hook')
 
             # cleaning
+            if 'debug' in self.options:
+                import pdb;pdb.set_trace()
             os.chdir(cwd)
             for path in self.build_dir, self.tmp_directory:
                 if os.path.isdir(path):

@@ -7,6 +7,8 @@ CHANGELOG
 ->UP
 --------
 
+    - add a debug stop flag
+    - add env file generation for debug
     - add per os options
     - fix develop link
     - win32 fix
