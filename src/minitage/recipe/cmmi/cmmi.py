@@ -100,6 +100,16 @@ class Recipe(common.MinitageCommonRecipe):
         ).strip()
         if configoptreplacer:
             self.configure_options = ' %s' % (configoptreplacer)
+        else:
+            configoptreplacer = self.options.get(
+                'configure-options-%s-replace' % self.uname.lower(),
+                ''
+            ).strip()
+            if configoptreplacer:
+                self.configure_options = ' %s' % (configoptreplacer)
+
+
+
 
         if 'darwin' in self.uname.lower():
             kv = uname()[2]
@@ -360,9 +370,13 @@ class Recipe(common.MinitageCommonRecipe):
                 self._call_hook('pending-make-install-hook')
                 self._make(directory, self.install_targets)
             except Exception, e:
-                remove_path(cwd)
-                shutil.move(tmp, self.prefix)
+                remove_path(self.prefix)
+                if os.path.exists(tmp):
+                        shutil.move(tmp, self.prefix)
                 raise core.MinimergeError('Install failed:\n\t%s' % e)
+        if 'debug' in self.options:
+            self.logger.debug('Make INSTALL STOP')
+            import pdb;pdb.set_trace()
         if os.path.exists(tmp):
             shutil.rmtree(tmp)
         os.chdir(cwd)
