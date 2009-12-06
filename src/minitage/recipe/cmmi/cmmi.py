@@ -112,7 +112,7 @@ class Recipe(common.MinitageCommonRecipe):
                 self.configure_options += ' %s' % self.options.get('configure-options-%s' % osxflavor, '')
 
         self.configure_options = common.ENDLINE.sub(' ', self.configure_options)
-        
+
         # if gmake is setted. taking it as the make cmd !
         # be careful to have a 'gmake' in your path
         # we have to make it only in non linux env.
@@ -132,7 +132,7 @@ class Recipe(common.MinitageCommonRecipe):
         # We will default to make '' and make install
         self.install_in_place = self.options.get('install-in-place')
         self.makedir = self.options.get('makedir-%s'%self.uname, self.options.get('makedir', '')).strip()
-        self.makeinstalldir = self.options.get('makeinstalldir-%s'%self.uname, 
+        self.makeinstalldir = self.options.get('makeinstalldir-%s'%self.uname,
                                                self.options.get('makeinstalldir','')).strip()
         self.make_targets = splitstrip(
             self.options.get('make-targets-%s'%self.uname,
@@ -155,13 +155,13 @@ class Recipe(common.MinitageCommonRecipe):
                 self._state_hash()
             )
             self.prefix = options['location'] = self.shared
-       
+
         # 'no' options
-        self.noconfigure = options.get('noconfigure-%s'%self.uname, 
+        self.noconfigure = options.get('noconfigure-%s'%self.uname,
                                         options.get('noconfigure', ''))
-        self.nomake = options.get('nomake-%s'%self.uname, 
+        self.nomake = options.get('nomake-%s'%self.uname,
                                   options.get('nomake', ''))
-        self.noinstall = options.get('noinstall-%s'%self.uname, 
+        self.noinstall = options.get('noinstall-%s'%self.uname,
                                      options.get('noinstall', ''))
 
     def install(self):
@@ -198,12 +198,12 @@ class Recipe(common.MinitageCommonRecipe):
 
             # set pypath
             self._set_py_path()
-            
+
             # write environment file for further debugging
             self.write_env()
             # preconfigure hook
             self._call_hook('post-unpack-hook')
-            
+
             # configure compilation build directory
             if self.build_dir:
                 if not os.path.isdir(self.build_dir):
@@ -216,10 +216,10 @@ class Recipe(common.MinitageCommonRecipe):
 
             # preautogen hook
             self._call_hook('pre-autogen-hook')
-            
+
             # autogen, maybe
             self._autogen()
-            
+
             # choose configure
             self.configure = self._choose_configure(self.compil_dir)
             self.options['compile-directory'] = self.build_dir
