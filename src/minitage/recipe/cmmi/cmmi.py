@@ -116,7 +116,7 @@ class Recipe(common.MinitageCommonRecipe):
             osxflavor = None
             if kv == '9.8.0':
                 osxflavor = 'leopard'
-            if kv == '10.0.0':
+            if kv.startswith('10.'):
                 osxflavor = 'snowleopard'
             if osxflavor:
                 self.configure_options += ' %s' % self.options.get('configure-options-%s' % osxflavor, '')
