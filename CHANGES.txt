@@ -7,6 +7,7 @@ CHANGELOG
 ->UP
 --------
 
+    - add a 'make-install-options' to add after make install targets
     - add a debug stop flag
     - add env file generation for debug
     - add per os options

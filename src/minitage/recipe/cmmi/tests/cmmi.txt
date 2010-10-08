@@ -64,6 +64,10 @@ Please look for options at : http://pypi.python.org/pypi/minitage.recipe.common#
     do not run make
 * noinstall(-UNAME)
     do not run make install
+* make-options(-UNAME)
+    options to prepent betwenn make and the target (eg MAKE 
+* make-install-options(-UNAME)
+    options to append after the install targets (eg make install DESDIR=foo)
 * hooks
 
   A hook is in the form /path/to/hook:CALLABLE::

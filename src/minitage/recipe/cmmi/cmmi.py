@@ -152,11 +152,17 @@ class Recipe(common.MinitageCommonRecipe):
         if not self.make_targets:
             self.make_targets = ['']
 
-        self.install_targets =  splitstrip(
-            self.options.get('make-install-targets%s'%self.uname,
-                             self.options.get( 'make-install-targets', 'install')),
-            '\n'
-        )
+
+        self.install_options = self.options.get('make-install-options%s'%self.uname,
+                                                self.options.get('make-install-options', ''))
+
+        self.install_targets =  ['%s %s' % (a, self.install_options)
+                                 for a in splitstrip(
+                                     self.options.get(
+                                         'make-install-targets%s'%self.uname,
+                                         self.options.get( 'make-install-targets', 'install')),
+                                     '\n'
+                                 )]
 
         # shared builds
         if 'shared' in self.options:
@@ -372,7 +378,7 @@ class Recipe(common.MinitageCommonRecipe):
             except Exception, e:
                 remove_path(self.prefix)
                 if os.path.exists(tmp):
-                        shutil.move(tmp, self.prefix)
+                    shutil.move(tmp, self.prefix)
                 raise core.MinimergeError('Install failed:\n\t%s' % e)
         if 'debug' in self.options:
             self.logger.debug('Make INSTALL STOP')
