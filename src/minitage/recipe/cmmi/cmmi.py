@@ -153,8 +153,9 @@ class Recipe(common.MinitageCommonRecipe):
             self.make_targets = ['']
 
 
-        self.install_options = self.options.get('make-install-options%s'%self.uname,
-                                                self.options.get('make-install-options', ''))
+        self.make_install_append_options = self.options.get('make-install-append-options%s'%self.uname,
+                                                self.options.get('make-install-append-options', '')).strip()
+        self.install_options = self.options.get('make-install-options%s'%self.uname, self.options.get('make-install-options', ''))
 
         self.install_targets =  ['%s %s' % (a, self.install_options)
                                  for a in splitstrip(
@@ -364,6 +365,10 @@ class Recipe(common.MinitageCommonRecipe):
         if self.makeinstalldir:
             os.chdir(self.makeinstalldir)
         tmp = '%s.old' % self.prefix
+        if len(self.make_install_append_options)>0:
+            self.install_targets = ['%s %s' % (t, self.make_options)
+                                    for t in self.install_targets]
+            self.make_options = ''
         if not self.noinstall:
             if os.path.isdir(self.prefix):
                 copy_tree(self.prefix, tmp)

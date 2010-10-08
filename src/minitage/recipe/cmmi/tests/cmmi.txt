@@ -66,6 +66,8 @@ Please look for options at : http://pypi.python.org/pypi/minitage.recipe.common#
     do not run make install
 * make-options(-UNAME)
     options to prepent betwenn make and the target (eg MAKE 
+* make-install-append-options(-UNAME)
+    if set, instead of prepending option before target, we will append them at install time
 * make-install-options(-UNAME)
     options to append after the install targets (eg make install DESDIR=foo)
 * hooks
