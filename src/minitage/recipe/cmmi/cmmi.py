@@ -28,6 +28,7 @@
 
 import os
 import shutil
+import logging
 try:
     from hashlib import sha1
 except ImportError: # Python < 2.5
@@ -41,6 +42,21 @@ from distutils.dir_util import copy_tree
 from minitage.recipe.common import common
 from minitage.core.common import  splitstrip, remove_path
 from minitage.core import core
+
+def remove_lafiles(directory, logger=False):
+    if not logger:
+        logging.basicConfig()
+        logger = logging.getLogger('cmmi.remove_lafiles')
+    p = os.path.abspath(directory)
+    if os.path.exists(p):
+        for cwd, ds, fs in os.walk(p):
+            for f in fs:
+                fp = os.path.join(cwd, f)
+                if fp.endswith('.la'):
+                    try:
+                        remove_path(fp)
+                    except:
+                        logger.error('Cant remove Libtool Archive: %s' % fp)
 
 class Recipe(common.MinitageCommonRecipe):
     """zc.buildout recipe for compiling and installing software"""
@@ -272,6 +288,9 @@ class Recipe(common.MinitageCommonRecipe):
 
             # regaining original cwd in case we changed build directory
             # during build process.
+
+            # remove lafiles
+            remove_lafiles(self.location)
 
             self.logger.info('Completed install.')
         except Exception, e:

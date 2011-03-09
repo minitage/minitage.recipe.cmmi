@@ -3,9 +3,8 @@ CHANGELOG
 =======================
 
 
-
-->UP
---------
+1.52 (unreleased)
+-----------------------
 
     - add a 'make-install-append-options' to add after make install targets the 'make-options' buildout option.
     - add a 'make-install-options' to add after make install targets
@@ -14,6 +13,7 @@ CHANGELOG
     - add per os options
     - fix develop link
     - win32 fix
+    - Remove la files if present
 
 1.37
 ---------
