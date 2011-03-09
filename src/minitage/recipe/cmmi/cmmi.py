@@ -43,7 +43,7 @@ from minitage.recipe.common import common
 from minitage.core.common import  splitstrip, remove_path
 from minitage.core import core
 
-def remove_lafiles(directory, logger=False):
+def move_lafiles(directory, logger=False):
     if not logger:
         logging.basicConfig()
         logger = logging.getLogger('cmmi.remove_lafiles')
@@ -53,8 +53,14 @@ def remove_lafiles(directory, logger=False):
             for f in fs:
                 fp = os.path.join(cwd, f)
                 if fp.endswith('.la'):
+                    bfp = "%s.old" % fp
+                    if os.path.exists(bfp):
+                        try:
+                            remove_path("%s.old" % fp)
+                        except:
+                            pass
                     try:
-                        remove_path(fp)
+                        os.rename(fp, "%s.old" % fp)
                     except:
                         logger.error('Cant remove Libtool Archive: %s' % fp)
 
@@ -90,6 +96,7 @@ class Recipe(common.MinitageCommonRecipe):
             '--prefix%s' % self.prefix_separator)
 
         # configuration options
+        self.move_lafiles = self.options.get('move-lafiles', '').strip()
         self.autogen = self.options.get('autogen', '').strip()
         self.configure_options = ' '.join(
             splitstrip(
@@ -290,7 +297,8 @@ class Recipe(common.MinitageCommonRecipe):
             # during build process.
 
             # remove lafiles
-            remove_lafiles(self.location)
+            if self.move_lafiles:
+                move_lafiles(self.prefix)
 
             self.logger.info('Completed install.')
         except Exception, e:
@@ -391,8 +399,8 @@ class Recipe(common.MinitageCommonRecipe):
             self.make_options_before = ''
             self.make_options_after = self.make_options
         self.make_options = ''
-        self.install_targets = ['%s %s %s' % (self.make_options_before, 
-                                              t, 
+        self.install_targets = ['%s %s %s' % (self.make_options_before,
+                                              t,
                                               self.make_options_after)
                                 for t in self.install_targets]
         self.make_options = ''

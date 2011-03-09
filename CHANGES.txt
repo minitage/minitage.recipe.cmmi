@@ -5,31 +5,30 @@ CHANGELOG
 
 1.53 (unreleased)
 -----------------
-
-- Nothing changed yet.
+- conditionnaly remove la files
 
 
 1.52 (2011-03-09)
 -----------------
 
-    - add a 'make-install-append-options' to add after make install targets the 'make-options' buildout option.
-    - add a 'make-install-options' to add after make install targets
-    - add a debug stop flag
-    - add env file generation for debug
-    - add per os options
-    - fix develop link
-    - win32 fix
-    - Remove la files if present
+- add a 'make-install-append-options' to add after make install targets the 'make-options' buildout option.
+- add a 'make-install-options' to add after make install targets
+- add a debug stop flag
+- add env file generation for debug
+- add per os options
+- fix develop link
+- win32 fix
+- Remove la files if present
 
 1.37
 ---------
 
-    - API FIX
+- API FIX
 
 -> 1.36
 --------
 
-    - splitted out from minitage.recipe
+- splitted out from minitage.recipe
 
 
 
