@@ -33,7 +33,7 @@ You can migrate your buldouts without any effort with buildout.minitagificator:
 
 
 ======================================
-Makina Corpus sponsorised software
+Makina Corpus sponsored software
 ======================================
 |makinacom|_
 
