@@ -3,7 +3,7 @@ CHANGELOG
 =======================
 
 
-1.53 (unreleased)
+1.53 (2011-03-09)
 -----------------
 - conditionnaly remove la files
 
