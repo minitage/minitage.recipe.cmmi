@@ -6,7 +6,7 @@ CHANGELOG
 1.54 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- use cache subdirs for download files
 
 
 1.53 (2011-03-09)
