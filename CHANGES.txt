@@ -3,7 +3,7 @@ CHANGELOG
 =======================
 
 
-1.54 (unreleased)
+1.54 (2012-05-09)
 -----------------
 
 - use cache subdirs for download files
