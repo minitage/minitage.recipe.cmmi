@@ -24,8 +24,7 @@ The reasons why i have rewrite yet another buildout recipes builder are:
 
 You can browse the code on minitage's following resources:
 
-    - http://git.minitage.org/git/minitage/eggs/minitage.recipe.cmmi/
-    - http://www.minitage.org/trac/browser/minitage/eggs/minitage.recipe.cmmi
+    - https://github.com/minitage/minitage.recipe.cmmi
 
 You can migrate your buldouts without any effort with buildout.minitagificator:
 
