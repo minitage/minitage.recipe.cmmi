@@ -6,7 +6,7 @@ CHANGELOG
 1.55 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- fix doc
 
 
 1.54 (2012-05-09)
