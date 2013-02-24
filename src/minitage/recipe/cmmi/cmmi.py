@@ -405,6 +405,8 @@ class Recipe(common.MinitageCommonRecipe):
                                 for t in self.install_targets]
         self.make_options = ''
         if not self.noinstall:
+            if not os.path.exists(tmp):
+                os.makedirs(tmp) 
             if os.path.isdir(self.prefix):
                 copy_tree(self.prefix, tmp)
             if not self.install_in_place:
