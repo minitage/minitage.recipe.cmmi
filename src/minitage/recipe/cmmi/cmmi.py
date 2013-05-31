@@ -151,8 +151,12 @@ class Recipe(common.MinitageCommonRecipe):
         # we have to make it only in non linux env.
         # if wehave gmake setted, use gmake too.
         gnumake = 'make'
-        if self.buildout.get('part', {}).get('gmake', None)\
-           and self.uname not in ['cygwin', 'linux']:
+        if (
+            self.options.get('gmake', 
+                self.buildout.get('part', {}).get('gmake', None)
+            )
+            and self.uname not in ['cygwin', 'linux']
+        ):
             gnumake = 'gmake'
         self.options['make-binary'] = self.make_cmd = self.options.get('make-binary-%s'%self.uname,
                                         self.options.get('make-binary', gnumake)).strip()

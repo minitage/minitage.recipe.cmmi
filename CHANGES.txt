@@ -6,7 +6,7 @@ CHANGELOG
 1.58 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- gmake can be make on OSX
 
 
 1.57 (2013-02-25)
