@@ -3,7 +3,7 @@ CHANGELOG
 =======================
 
 
-1.58 (unreleased)
+1.58 (2013-06-02)
 -----------------
 
 - gmake can be make on OSX
