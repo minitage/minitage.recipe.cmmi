@@ -53,6 +53,7 @@ setup(
         
         'minitage.core',
         'iniparse',
+        'setuptools',
         'minitage.recipe.common',
     ],
     extras_require={'test': ['IPython', 'zope.testing', 'mocker']},
